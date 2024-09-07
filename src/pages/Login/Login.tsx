@@ -3,12 +3,28 @@ import Button from "../../components/Button/Button";
 import LogoHorizontal from "../../images/LogoHorizontal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../api/api";
+import Cookies from "universal-cookie";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const cookie = new Cookies();
+
     const navigate = useNavigate();
+
+    const sendForm = async () => {
+        try {
+            const { data } = await api.post("/responsavel/login", { email, senha: password });
+            if (data.token) {
+                cookie.set("token", data.token, {path: "/"})
+                navigate("/home")
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     return (
         <div className="bg-primaria w-screen h-screen flex flex-col gap-8 items-center">
@@ -24,7 +40,7 @@ const Login = () => {
                 type="password"
             ></Input>
             <div className="pt-8">
-                <Button text="Login" onClick={() => navigate("/home")} />
+                <Button text="Login" onClick={() => sendForm()} />
             </div>
         </div>
     );
