@@ -1,15 +1,14 @@
-import CardHome1 from "../../components/Card/CardHome1";
 import Navbar from "../../components/Navbar/Navbar";
 import { useEffect, useState } from "react";
 import { api } from "../../api/api";
-import { BsHouse } from "react-icons/bs";
 import Search from "../../components/Search/Search";
 import ButtonTab from "../../components/Button/ButtonTab";
 import { FaArrowLeft, FaArrowRight, FaCat, FaRegClipboard } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import Cookies from "universal-cookie";
-import CardHome2 from "../../components/Card/CardHome2";
 import ButtonIcon from "../../components/Button/ButtonIcon";
+import CardGerenciamento from "../../components/Card/CardGerenciamento";
+import Button from "../../components/Button/Button";
 
 interface Atendimento {
     data: string;
@@ -43,7 +42,7 @@ interface Pets {
     tutor: string;
 }
 
-const Home = () => {
+const Gerenciar = () => {
     const [atendimentos, setAtendimentos] = useState<Atendimento[]>([]);
     const [responsaveis, setResponsaveis] = useState<Responsaveis[]>([]);
     const [pets, setPets] = useState<Pets[]>([]);
@@ -54,16 +53,16 @@ const Home = () => {
     const [responsaveisPage, setResponsaveisPage] = useState(0);
     const [petsPage, setPetsPage] = useState(0);
 
-    const pageSize = 8;
+    const pageSize = 9;
 
-    const [cardTypes, setCardTypes] = useState("atendimentos");
+    const [cardTypes, setCardTypes] = useState("Atendimentos");
 
     const cookie = new Cookies();
     const token = cookie.get("token");
     api.defaults.headers.common.Authorization = token;
 
     const loadAtendimentos = async () => {
-        let atendimentos = (await api.get("/atendimento")).data.atendimentos as Atendimento[];        
+        let atendimentos = (await api.get("/atendimento")).data.atendimentos as Atendimento[];
         atendimentos = atendimentos.map((value) => {
             let dataTemp = "";
             dataTemp = value!.data.split("T")[0] as string;
@@ -90,11 +89,11 @@ const Home = () => {
 
     const getPage = () => {
         switch (cardTypes) {
-            case "atendimentos":
+            case "Atendimentos":
                 return atendimentoPage;
-            case "responsaveis":
+            case "Responsaveis":
                 return responsaveisPage;
-            case "pets":
+            case "Pets":
                 return petsPage;
             default:
                 return 0;
@@ -112,12 +111,13 @@ const Home = () => {
             <Navbar />
             <div className="flex justify-between items-center">
                 <div className="flex items-center p-4 py-6 gap-3">
-                    <BsHouse className="text-[500%]" />
-                    <h1 className="text-[150%]">Página Inicial</h1>
+                    {cardTypes == "Atendimentos" ? <FaRegClipboard className="text-[500%]" /> : <></>}
+                    {cardTypes == "Responsaveis" ? <FaUserDoctor className="text-[500%]" /> : <></>}
+                    {cardTypes == "Pets" ? <FaCat className="text-[500%]" /> : <></>}
+                    <h1 className="text-[150%]">Gerenciar {cardTypes}</h1>
                 </div>
-                <div className="px-10">
+                <div className="flex px-10 gap-2 items-center">
                     <Search
-                        width="w-[50rem]"
                         onChange={(text) => {
                             setAtendimentoPage(0);
                             setResponsaveisPage(0);
@@ -167,6 +167,7 @@ const Home = () => {
                             });
                         }}
                     />
+                    <Button className="bg-primaria-lighter text-white h-14 w-80" text={`+ Cadastrar ${cardTypes}`} />
                 </div>
             </div>
             <div className="flex justify-between items-center p-4">
@@ -175,27 +176,27 @@ const Home = () => {
                         text="Atendimentos"
                         color="primaria"
                         icon={<FaRegClipboard />}
-                        onClick={() => setCardTypes("atendimentos")}
+                        onClick={() => setCardTypes("Atendimentos")}
                     />
                     <ButtonTab
                         text="Responsáveis"
                         icon={<FaUserDoctor />}
-                        onClick={() => setCardTypes("responsaveis")}
+                        onClick={() => setCardTypes("Responsaveis")}
                     />
-                    <ButtonTab text="Pets" icon={<FaCat />} onClick={() => setCardTypes("pets")} />
+                    <ButtonTab text="Pets" icon={<FaCat />} onClick={() => setCardTypes("Pets")} />
                 </div>
                 <div className="flex gap-4 font-bold items-center">
                     <ButtonIcon
                         icon={<FaArrowLeft />}
                         onClick={() => {
                             switch (cardTypes) {
-                                case "atendimentos":
+                                case "Atendimentos":
                                     setAtendimentoPage((prev) => (prev - 1 <= 0 ? 0 : prev - 1));
                                     break;
-                                case "responsaveis":
+                                case "Responsaveis":
                                     setResponsaveisPage((prev) => (prev - 1 <= 0 ? 0 : prev - 1));
                                     break;
-                                case "pets":
+                                case "Pets":
                                     setPetsPage((prev) => (prev - 1 <= 0 ? 0 : prev - 1));
                                     break;
                                 default:
@@ -208,19 +209,19 @@ const Home = () => {
                         icon={<FaArrowRight />}
                         onClick={() => {
                             switch (cardTypes) {
-                                case "atendimentos":
+                                case "Atendimentos":
                                     setAtendimentoPage((prev) =>
-                                        prev < Math.floor(atendimentos.length / pageSize) ? prev + 1 : prev
+                                        prev < Math.ceil(atendimentos.length / pageSize) - 1 ? prev + 1 : prev
                                     );
                                     break;
-                                case "responsaveis":
+                                case "Responsaveis":
                                     setResponsaveisPage((prev) =>
-                                        prev < Math.floor(responsaveis.length / pageSize) ? prev + 1 : prev
+                                        prev < Math.ceil(responsaveis.length / pageSize) - 1 ? prev + 1 : prev
                                     );
                                     break;
-                                case "pets":
+                                case "Pets":
                                     setPetsPage((prev) =>
-                                        prev < Math.floor(pets.length / pageSize) ? prev + 1 : prev
+                                        prev < Math.ceil(pets.length / pageSize) - 1 ? prev + 1 : prev
                                     );
                                     break;
                                 default:
@@ -232,21 +233,33 @@ const Home = () => {
             </div>
             <div className="flex justify-center items-center">
                 <div className="flex gap-4 flex-wrap justify-center w-11/12 p-8">
-                    {atendimentosFiltered.length > 0 && cardTypes == "atendimentos" ? (
+                    {atendimentosFiltered.length > 0 && cardTypes == "Atendimentos" ? (
                         atendimentosFiltered
                             .slice(atendimentoPage * pageSize, atendimentoPage * pageSize + pageSize)
                             .map((value) => {
-                                return <CardHome1 id={value.id} key={value.id} />;
+                                return (
+                                    <CardGerenciamento
+                                        img={value.imagem}
+                                        nome={value.nome}
+                                        pet={false}
+                                        tags={{
+                                            Tipo: value.tipo,
+                                            Responsavel: value.responsavel,
+                                            Data: value.data,
+                                        }}
+                                        key={value.id}
+                                    />
+                                );
                             })
                     ) : (
                         <></>
                     )}
-                    {responsaveisFiltered.length > 0 && cardTypes == "responsaveis" ? (
+                    {responsaveisFiltered.length > 0 && cardTypes == "Responsaveis" ? (
                         responsaveisFiltered
                             .slice(responsaveisPage * pageSize, responsaveisPage * pageSize + pageSize)
                             .map((value) => {
                                 return (
-                                    <CardHome2
+                                    <CardGerenciamento
                                         img={value.imagem}
                                         nome={value.nome}
                                         pet={false}
@@ -258,12 +271,12 @@ const Home = () => {
                     ) : (
                         <></>
                     )}
-                    {petsFiltered.length > 0 && cardTypes == "pets" ? (
+                    {petsFiltered.length > 0 && cardTypes == "Pets" ? (
                         petsFiltered
                             .slice(petsPage * pageSize, petsPage * pageSize + pageSize)
                             .map((value) => {
                                 return (
-                                    <CardHome2
+                                    <CardGerenciamento
                                         img={value.imagem}
                                         nome={value.nome}
                                         pet={false}
@@ -285,4 +298,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Gerenciar;
