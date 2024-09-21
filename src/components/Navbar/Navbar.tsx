@@ -31,8 +31,8 @@ const Navbar = () => {
     const optionsUser = () => {
         return (
             <div className="flex z-10 bg-primaria flex-col text-white p-4 rounded-bl-md gap-2 absolute right-0 w-44">
-                <Button height={3} width={3} text="Meu Perfil" />
-                <Button height={3} width={3} text="Logout" onClick={logout} />
+                <Button className="p-3 px-3 text-white hover:text-primaria border hover:bg-white" text="Meu Perfil" />
+                <Button className="p-3 px-3 text-white hover:text-primaria border hover:bg-white" text="Logout" onClick={logout} />
             </div>
         );
     };
@@ -69,7 +69,9 @@ const Navbar = () => {
                             </button>
                         </div>
                         <div>
-                            <button className="flex flex-col items-center">
+                            <button className="flex flex-col items-center" onClick={() => {
+                                navigate("/gerenciar")
+                            }}>
                                 <FaClipboard />
                                 <p className="text-sm">Gerenciar Atendimentos</p>
                             </button>
