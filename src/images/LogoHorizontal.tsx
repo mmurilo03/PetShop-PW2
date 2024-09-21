@@ -1,6 +1,6 @@
 interface LogoProps {
-  width: string;
-  height: string;
+  width?: string;
+  height?: string;
 }
 
 const LogoHorizontal = (props: LogoProps) => {

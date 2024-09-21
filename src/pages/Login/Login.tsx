@@ -29,7 +29,7 @@ const Login = () => {
     return (
         <div className="bg-primaria w-screen h-screen flex flex-col gap-8 items-center">
             <div className="pt-14">
-                <LogoHorizontal />
+                <LogoHorizontal  />
             </div>
             <div className="font-bold text-7xl text-white pb-14 pt-24">Login</div>
             <Input value={email} onChange={(value) => setEmail(value)} label="Email" type="email"></Input>
