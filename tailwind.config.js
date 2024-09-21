@@ -10,7 +10,7 @@ export default {
           sans: ["Roboto", "sans-serif"],
         },
         colors: {
-            primaria: {DEFAULT: '#1501A1', light: "#2205eb"},
+            primaria: {DEFAULT: '#1501A1', light: "#2205eb", lighter: "#5992FF"},
             secundaria: {DEFAULT: '#D9D9D9'},
         },
         width: {

@@ -117,6 +117,7 @@ const Home = () => {
                 </div>
                 <div className="px-10">
                     <Search
+                        width="w-[50rem]"
                         onChange={(text) => {
                             setAtendimentoPage(0);
                             setResponsaveisPage(0);

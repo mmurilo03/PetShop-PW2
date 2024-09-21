@@ -49,7 +49,7 @@ const Login = () => {
                 type="password"
             ></Input>
             <div className="pt-8">
-                <Button height={6} width={44} text="Login" onClick={() => sendForm()} />
+                <Button className="bg-white text-primaria p-6 px-44" text="Login" onClick={() => sendForm()} />
             </div>
         </div>
     );
