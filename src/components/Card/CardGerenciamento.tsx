@@ -1,5 +1,8 @@
+import { useEffect, useState } from "react";
 import { FaPaw, FaPencilAlt, FaRegTrashAlt } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
+import Cookies from "universal-cookie";
+import { api } from "../../api/api";
 
 interface Tags {
     [propName: string]: string;
@@ -19,12 +22,50 @@ const CardGerenciamento = (props: CardProps) => {
         cont.push(`${tag}: ${props.tags[tag]}`);
     }
 
+    const [image, setImage] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    const getImage = async () => {
+        let hasImage = false;
+        let imageName = "";
+        try {
+            const cookie = new Cookies();
+            const token = cookie.get("token");
+            api.defaults.headers.common.Authorization = token;
+
+            imageName = props.img;
+        } catch (e) {}
+
+        try {
+            await api.get(`images/${imageName}`);
+            hasImage = true;
+        } catch (e) {
+            setImage(
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            );
+        }
+
+        if (hasImage) {
+            try {
+                const image = api.getUri({ url: `images/${imageName}` });
+                setImage(image);
+                setLoading(false);
+            } catch (error) {}
+        }
+    };
+
+    useEffect(() => {
+        getImage();
+    }, []);
+
+    if (loading) <></>;
+
     return (
         <>
             <div className="flex flex-row w-96 h-32 rounded-lg shadow-lg">
-                <img className="rounded-l-lg h-32" src={props.img} />
-                <div className="flex flex-col text-[90%]">
-                    <div className="flex justify-end gap-2">
+                <img className="rounded-l-lg h-32" src={image} />
+                <div className="flex flex-col text-[90%] w-full">
+                    <div className="flex justify-end gap-2 pr-2">
                         <button>
                             <FaPencilAlt />{" "}
                         </button>
