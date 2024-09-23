@@ -10,6 +10,7 @@ import { FaUserDoctor } from "react-icons/fa6";
 import Cookies from "universal-cookie";
 import CardHome2 from "../../components/Card/CardHome2";
 import ButtonIcon from "../../components/Button/ButtonIcon";
+import { useLocation } from "react-router-dom";
 
 interface Atendimento {
     data: string;
@@ -53,17 +54,18 @@ const Home = () => {
     const [atendimentoPage, setAtendimentoPage] = useState(0);
     const [responsaveisPage, setResponsaveisPage] = useState(0);
     const [petsPage, setPetsPage] = useState(0);
+    const location = useLocation();
 
     const pageSize = 8;
 
-    const [cardTypes, setCardTypes] = useState("atendimentos");
+    const [cardTypes, setCardTypes] = useState(location.state?.cardTypes ?? "Atendimentos");
 
     const cookie = new Cookies();
     const token = cookie.get("token");
     api.defaults.headers.common.Authorization = token;
 
     const loadAtendimentos = async () => {
-        let atendimentos = (await api.get("/atendimento")).data.atendimentos as Atendimento[];        
+        let atendimentos = (await api.get("/atendimento")).data.atendimentos as Atendimento[];
         atendimentos = atendimentos.map((value) => {
             let dataTemp = "";
             dataTemp = value!.data.split("T")[0] as string;
@@ -173,29 +175,35 @@ const Home = () => {
                 <div className="flex items-center gap-10 font-bold">
                     <ButtonTab
                         text="Atendimentos"
-                        color="primaria"
+                        color={cardTypes == "Atendimentos" ? "primaria" : ""}
                         icon={<FaRegClipboard />}
-                        onClick={() => setCardTypes("atendimentos")}
+                        onClick={() => setCardTypes("Atendimentos")}
                     />
                     <ButtonTab
                         text="Responsáveis"
+                        color={cardTypes == "Responsáveis" ? "primaria" : ""}
                         icon={<FaUserDoctor />}
-                        onClick={() => setCardTypes("responsaveis")}
+                        onClick={() => setCardTypes("Responsáveis")}
                     />
-                    <ButtonTab text="Pets" icon={<FaCat />} onClick={() => setCardTypes("pets")} />
+                    <ButtonTab
+                        text="Pets"
+                        icon={<FaCat />}
+                        color={cardTypes == "Pets" ? "primaria" : ""}
+                        onClick={() => setCardTypes("Pets")}
+                    />
                 </div>
                 <div className="flex gap-4 font-bold items-center">
                     <ButtonIcon
                         icon={<FaArrowLeft />}
                         onClick={() => {
                             switch (cardTypes) {
-                                case "atendimentos":
+                                case "Atendimentos":
                                     setAtendimentoPage((prev) => (prev - 1 <= 0 ? 0 : prev - 1));
                                     break;
-                                case "responsaveis":
+                                case "Responsáveis":
                                     setResponsaveisPage((prev) => (prev - 1 <= 0 ? 0 : prev - 1));
                                     break;
-                                case "pets":
+                                case "Pets":
                                     setPetsPage((prev) => (prev - 1 <= 0 ? 0 : prev - 1));
                                     break;
                                 default:
@@ -208,17 +216,17 @@ const Home = () => {
                         icon={<FaArrowRight />}
                         onClick={() => {
                             switch (cardTypes) {
-                                case "atendimentos":
+                                case "Atendimentos":
                                     setAtendimentoPage((prev) =>
                                         prev < Math.floor(atendimentos.length / pageSize) ? prev + 1 : prev
                                     );
                                     break;
-                                case "responsaveis":
+                                case "Responsáveis":
                                     setResponsaveisPage((prev) =>
                                         prev < Math.floor(responsaveis.length / pageSize) ? prev + 1 : prev
                                     );
                                     break;
-                                case "pets":
+                                case "Pets":
                                     setPetsPage((prev) =>
                                         prev < Math.floor(pets.length / pageSize) ? prev + 1 : prev
                                     );
@@ -232,7 +240,7 @@ const Home = () => {
             </div>
             <div className="flex justify-center items-center">
                 <div className="flex gap-4 flex-wrap justify-center w-11/12 p-8">
-                    {atendimentosFiltered.length > 0 && cardTypes == "atendimentos" ? (
+                    {atendimentosFiltered.length > 0 && cardTypes == "Atendimentos" ? (
                         atendimentosFiltered
                             .slice(atendimentoPage * pageSize, atendimentoPage * pageSize + pageSize)
                             .map((value) => {
@@ -241,7 +249,7 @@ const Home = () => {
                     ) : (
                         <></>
                     )}
-                    {responsaveisFiltered.length > 0 && cardTypes == "responsaveis" ? (
+                    {responsaveisFiltered.length > 0 && cardTypes == "Responsáveis" ? (
                         responsaveisFiltered
                             .slice(responsaveisPage * pageSize, responsaveisPage * pageSize + pageSize)
                             .map((value) => {
@@ -258,7 +266,7 @@ const Home = () => {
                     ) : (
                         <></>
                     )}
-                    {petsFiltered.length > 0 && cardTypes == "pets" ? (
+                    {petsFiltered.length > 0 && cardTypes == "Pets" ? (
                         petsFiltered
                             .slice(petsPage * pageSize, petsPage * pageSize + pageSize)
                             .map((value) => {

@@ -9,6 +9,7 @@ import Cookies from "universal-cookie";
 import ButtonIcon from "../../components/Button/ButtonIcon";
 import CardGerenciamento from "../../components/Card/CardGerenciamento";
 import Button from "../../components/Button/Button";
+import { useLocation } from "react-router-dom";
 
 interface Atendimento {
     data: string;
@@ -52,10 +53,11 @@ const Gerenciar = () => {
     const [atendimentoPage, setAtendimentoPage] = useState(0);
     const [responsaveisPage, setResponsaveisPage] = useState(0);
     const [petsPage, setPetsPage] = useState(0);
+    const location = useLocation();
 
     const pageSize = 9;
 
-    const [cardTypes, setCardTypes] = useState("Atendimentos");
+    const [cardTypes, setCardTypes] = useState(location.state?.cardTypes ?? "Atendimentos");
 
     const cookie = new Cookies();
     const token = cookie.get("token");
@@ -91,7 +93,7 @@ const Gerenciar = () => {
         switch (cardTypes) {
             case "Atendimentos":
                 return atendimentoPage;
-            case "Responsaveis":
+            case "Responsáveis":
                 return responsaveisPage;
             case "Pets":
                 return petsPage;
@@ -112,7 +114,7 @@ const Gerenciar = () => {
             <div className="flex justify-between items-center">
                 <div className="flex items-center p-4 py-6 gap-3">
                     {cardTypes == "Atendimentos" ? <FaRegClipboard className="text-[500%]" /> : <></>}
-                    {cardTypes == "Responsaveis" ? <FaUserDoctor className="text-[500%]" /> : <></>}
+                    {cardTypes == "Responsáveis" ? <FaUserDoctor className="text-[500%]" /> : <></>}
                     {cardTypes == "Pets" ? <FaCat className="text-[500%]" /> : <></>}
                     <h1 className="text-[150%]">Gerenciar {cardTypes}</h1>
                 </div>
@@ -167,23 +169,32 @@ const Gerenciar = () => {
                             });
                         }}
                     />
-                    <Button className="bg-primaria-lighter text-white h-14 w-80" text={`+ Cadastrar ${cardTypes}`} />
+                    <Button
+                        className="bg-primaria-lighter text-white h-14 w-80"
+                        text={`+ Cadastrar ${cardTypes}`}
+                    />
                 </div>
             </div>
             <div className="flex justify-between items-center p-4">
                 <div className="flex items-center gap-10 font-bold">
-                    <ButtonTab
+                <ButtonTab
                         text="Atendimentos"
-                        color="primaria"
+                        color={cardTypes == "Atendimentos" ? "primaria" : ""}
                         icon={<FaRegClipboard />}
                         onClick={() => setCardTypes("Atendimentos")}
                     />
                     <ButtonTab
                         text="Responsáveis"
+                        color={cardTypes == "Responsáveis" ? "primaria" : ""}
                         icon={<FaUserDoctor />}
-                        onClick={() => setCardTypes("Responsaveis")}
+                        onClick={() => setCardTypes("Responsáveis")}
                     />
-                    <ButtonTab text="Pets" icon={<FaCat />} onClick={() => setCardTypes("Pets")} />
+                    <ButtonTab
+                        text="Pets"
+                        icon={<FaCat />}
+                        color={cardTypes == "Pets" ? "primaria" : ""}
+                        onClick={() => setCardTypes("Pets")}
+                    />
                 </div>
                 <div className="flex gap-4 font-bold items-center">
                     <ButtonIcon
@@ -193,7 +204,7 @@ const Gerenciar = () => {
                                 case "Atendimentos":
                                     setAtendimentoPage((prev) => (prev - 1 <= 0 ? 0 : prev - 1));
                                     break;
-                                case "Responsaveis":
+                                case "Responsáveis":
                                     setResponsaveisPage((prev) => (prev - 1 <= 0 ? 0 : prev - 1));
                                     break;
                                 case "Pets":
@@ -214,7 +225,7 @@ const Gerenciar = () => {
                                         prev < Math.ceil(atendimentos.length / pageSize) - 1 ? prev + 1 : prev
                                     );
                                     break;
-                                case "Responsaveis":
+                                case "Responsáveis":
                                     setResponsaveisPage((prev) =>
                                         prev < Math.ceil(responsaveis.length / pageSize) - 1 ? prev + 1 : prev
                                     );
@@ -254,7 +265,7 @@ const Gerenciar = () => {
                     ) : (
                         <></>
                     )}
-                    {responsaveisFiltered.length > 0 && cardTypes == "Responsaveis" ? (
+                    {responsaveisFiltered.length > 0 && cardTypes == "Responsáveis" ? (
                         responsaveisFiltered
                             .slice(responsaveisPage * pageSize, responsaveisPage * pageSize + pageSize)
                             .map((value) => {
