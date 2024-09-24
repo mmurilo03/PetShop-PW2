@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LogoHorizontal from "../../images/LogoHorizontal";
 import { FaUser, FaCat, FaHome } from "react-icons/fa";
 import { FaUserDoctor, FaClipboard } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../Context/AuthContext";
+import { AuthContext, getUser } from "../Context/AuthContext";
 import Button from "../Button/Button";
 import Cookies from "universal-cookie";
 import { CardContext } from "../Context/CardContext";
@@ -45,6 +45,16 @@ const Navbar = () => {
             </div>
         );
     };
+
+    useEffect(() => {
+        const tempUser = getUser();
+        user.email = tempUser.email;
+        user.funcao = tempUser.funcao;
+        user.id = tempUser.id;
+        user.imagem = tempUser.imagem;
+        user.nome = tempUser.nome;
+        user.telefone = tempUser.telefone;
+    }, []);
 
     return (
         <>

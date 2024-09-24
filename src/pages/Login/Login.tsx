@@ -28,6 +28,7 @@ const Login = () => {
                 user.telefone = data;
 
                 cookie.set("token", data.token, { path: "/" });
+                cookie.set("user", user, { path: "/" });
                 navigate("/home");
             }
         } catch (e) {
