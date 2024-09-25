@@ -3,16 +3,51 @@ import { FaPaw, FaPencilAlt, FaRegTrashAlt } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import Cookies from "universal-cookie";
 import { api } from "../../api/api";
+import { useNavigate } from "react-router-dom";
 
 interface Tags {
     [propName: string]: string;
 }
 
 interface CardProps {
+    type: "atendimento" | "responsavel" | "pet";
+    id: number;
     img: string;
     nome: string;
     pet: boolean;
+    onDelete: () => void
     tags: Tags;
+}
+
+interface Atendimento {
+    data: string;
+    descricao: string;
+    endereco: string;
+    id: number;
+    imagem: string;
+    nome: string;
+    petId: number;
+    responsavel: string;
+    responsavelId: number;
+    status: number;
+    tipo: string;
+}
+interface Responsaveis {
+    id: number;
+    email: string;
+    funcao: string;
+    imagem: string;
+    nome: string;
+    telefone: string;
+}
+
+interface Pets {
+    id: number;
+    imagem: string;
+    endereco: string;
+    nome: string;
+    telefone: string;
+    tutor: string;
 }
 
 const CardGerenciamento = (props: CardProps) => {
@@ -21,6 +56,12 @@ const CardGerenciamento = (props: CardProps) => {
     for (let tag of Object.keys(props.tags)) {
         cont.push(`${tag}: ${props.tags[tag]}`);
     }
+
+    const navigate = useNavigate();
+
+    const cookie = new Cookies();
+    const token = cookie.get("token");
+    api.defaults.headers.common.Authorization = token;
 
     const [image, setImage] = useState("");
     const [loading, setLoading] = useState(true);
@@ -54,6 +95,26 @@ const CardGerenciamento = (props: CardProps) => {
         }
     };
 
+    const goToFormPage = async () => {
+        switch (props.type) {
+            case "atendimento":
+                const atendimento: Atendimento = (await api.get(`atendimento/${props.id}`)).data.atendimento;
+                navigate("/gerenciar/form/atendimento", { state: { obj: atendimento } });
+                break;
+            case "responsavel":
+                // const responsavel: Responsaveis = (await api.post(`responsavel/`, { id: props.id })).data
+                //     .responsavel;
+                // navigate("/gerenciar/form/responsavel", { state: { obj: responsavel } });
+                break;
+            case "pet":
+                const pet: Pets = (await api.get(`pet/${props.id}`)).data.pet;
+                navigate("form/pet", { state: { obj: pet } });
+                break;
+            default:
+                break;
+        }
+    };
+
     useEffect(() => {
         getImage();
     }, []);
@@ -66,10 +127,16 @@ const CardGerenciamento = (props: CardProps) => {
                 <img className="rounded-l-lg h-32" src={image} />
                 <div className="flex flex-col text-[90%] w-full">
                     <div className="flex ml-52 gap-2 pr-2">
-                        <button>
+                        <button
+                            onClick={() => {
+                                goToFormPage();
+                            }}
+                        >
                             <FaPencilAlt />
                         </button>
-                        <button className="text-red-500">
+                        <button className="text-red-500" onClick={() => {
+                            props.onDelete();
+                        }}>
                             <FaRegTrashAlt />
                         </button>
                     </div>
