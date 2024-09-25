@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 interface InputProps {
     text: string;
-    color?: "primaria";
+    color?: string;
     icon: ReactNode
     onClick?: () => void;
 }
