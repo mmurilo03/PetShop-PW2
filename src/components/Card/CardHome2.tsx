@@ -3,6 +3,7 @@ import { FaUserDoctor } from "react-icons/fa6";
 import Cookies from "universal-cookie";
 import { api } from "../../api/api";
 import { useEffect, useState } from "react";
+import Loading from "../Loading/Loading";
 
 interface Tags {
     [propName: string]: string;
@@ -18,7 +19,7 @@ interface CardProps {
 const CardHome2 = (props: CardProps) => {
     const cont = [""];
     const [image, setImage] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     for (let tag of Object.keys(props.tags)) {
         cont.push(`${tag}: ${props.tags[tag]}`);
@@ -43,20 +44,20 @@ const CardHome2 = (props: CardProps) => {
             try {
                 const image = api.getUri({ url: `images/${props.img}` });
                 setImage(image);
-                setLoading(false);
             } catch (error) {}
         }
+        setLoading(false)
     };
 
     useEffect(() => {
         getImage();
-    }, []);
+    }, [image]);
 
-    if (loading) return <></>;
+    if (loading) return <Loading/>;
 
     return (
         <>
-            <div className="w-80 rounded-lg shadow-lg">
+            <div className="w-80 rounded-lg shadow-lg animate-in zoom-in-75">
                 <img className="rounded-t-lg object-cover h-44 w-80" src={image} />
                 <div className="flex flex-col justify-between text-[90%]">
                     <div className="p-1 px-2 gap-2 flex items-center">

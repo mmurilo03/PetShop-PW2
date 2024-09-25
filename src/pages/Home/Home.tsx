@@ -112,7 +112,7 @@ const Home = () => {
     return (
         <>
             <Navbar />
-            <div className="flex justify-between items-center xsm:flex-col md:flex-col lg:flex-row">
+            <div className="flex justify-between items-center xsm:flex-col md:flex-col lg:flex-row animate-in fade-in-20">
                 <div className="flex items-center p-4 py-6 gap-3">
                     <BsHouse className="text-[500%]" />
                     <h1 className="text-[150%]">Página Inicial</h1>
