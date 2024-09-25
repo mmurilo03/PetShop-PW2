@@ -66,6 +66,7 @@ const CardGerenciamento = (props: CardProps) => {
 
     const [image, setImage] = useState("");
     const [loading, setLoading] = useState(true);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(true);
 
     const getImage = async () => {
         let hasImage = false;
@@ -138,7 +139,7 @@ const CardGerenciamento = (props: CardProps) => {
                         <button
                             className="text-red-500"
                             onClick={() => {
-                                props.onDelete();
+                                setShowDeleteConfirm(true);
                             }}
                         >
                             <FaRegTrashAlt />
@@ -155,6 +156,31 @@ const CardGerenciamento = (props: CardProps) => {
                     ))}
                 </div>
             </div>
+            {showDeleteConfirm && (
+                <div className="fixed inset-0 flex items-center justify-center bg-opacity-40 bg-gray-600">
+                    <div className="bg-white rounded-md p-6 shadow-lg w-80 animate-in zoom-in-100">
+                        <h2 className="text-lg font-semibold mb-4">Confirmação</h2>
+                        <p className="pb-6">Deseja excluir <span className="font-bold">{props.nome}</span>?</p>
+                        <div className="flex justify-end gap-2">
+                            <button
+                                onClick={() => setShowDeleteConfirm(false)}
+                                className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-500 transition-colors duration-300"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowDeleteConfirm(false);
+                                    props.onDelete();
+                                }}
+                                className="px-4 py-2 bg-red-500 rounded-md hover:bg-red-700 transition-colors duration-300 text-white "
+                            >
+                                Confirmar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 };
