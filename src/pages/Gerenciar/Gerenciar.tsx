@@ -10,6 +10,7 @@ import ButtonIcon from "../../components/Button/ButtonIcon";
 import CardGerenciamento from "../../components/Card/CardGerenciamento";
 import Button from "../../components/Button/Button";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getUser } from "../../components/Context/AuthContext";
 
 interface Atendimento {
     data: string;
@@ -127,7 +128,8 @@ const Gerenciar = () => {
                 navigate("/gerenciar");
                 break;
             case "Responsáveis":
-                await api.delete(`responsavel/delete${id}`);
+                const tempUser = getUser();
+                await api.delete(`responsavel/delete/${id}`, { data: { id: tempUser.id } });
                 loadResponsaveis();
                 navigate("/gerenciar");
                 break;
@@ -149,7 +151,7 @@ const Gerenciar = () => {
 
     return (
         <>
-        <Navbar/>
+            <Navbar />
             <div className="flex md:flex-row xsm:flex-col justify-between items-center pt-4 animate-in fade-in-20">
                 <div className="flex items-center p-4 py-6 gap-3">
                     {cardTypes == "Atendimentos" ? <FaRegClipboard className="text-[500%]" /> : <></>}
@@ -159,7 +161,7 @@ const Gerenciar = () => {
                 </div>
                 <div className="flex px-10 gap-2 lg:flex-row xsm:flex-col md:flex-col items-center">
                     <Search
-                    width="w-full"
+                        width="w-full"
                         onChange={(text) => {
                             setAtendimentoPage(0);
                             setResponsaveisPage(0);
@@ -218,7 +220,7 @@ const Gerenciar = () => {
             </div>
             <div className="flex justify-between xsm:gap-14 xsm:w-screen lg:flex-row md:flex-col xsm:flex-col items-center p-8">
                 <div className="flex items-center gap-10 lg:flex-row md:flex-col xsm:flex-col font-bold">
-                <ButtonTab
+                    <ButtonTab
                         text="Atendimentos"
                         color={cardTypes == "Atendimentos" ? "primaria" : ""}
                         icon={<FaRegClipboard />}
