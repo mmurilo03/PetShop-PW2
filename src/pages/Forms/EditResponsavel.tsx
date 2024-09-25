@@ -100,7 +100,7 @@ const EditResponsavel = () => {
                     >
                         <FaArrowLeft className="text-[200%]" />
                     </button>
-                    <h1 className="font-bold text-4xl text-black mx-auto">Cadastrar Pet</h1>
+                    <h1 className="font-bold text-4xl text-black mx-auto">Editar perfil</h1>
                 </div>
                 <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">

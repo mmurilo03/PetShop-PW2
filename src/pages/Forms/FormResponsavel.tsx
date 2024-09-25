@@ -65,7 +65,7 @@ const FormResponsavel = () => {
             <div className="w-full h-full flex flex-col gap-8 items-center p-6 sm:p-6 md:p-8">
                 <div className="flex w-full items-center">
                 <button onClick={() => {
-                    navigate("/gerenciar")
+                    navigate("/gerenciar", { state: { cardTypes: "Responsáveis" } })
                 }}>
                     <FaArrowLeft className="text-[200%]" />
                 </button>

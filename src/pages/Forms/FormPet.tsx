@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect } from "react";
 import { FormContext } from "../../components/Context/FormContext";
 import { AdvancedMarker, APIProvider, Map } from "@vis.gl/react-google-maps";
+import { FaArrowLeft } from "react-icons/fa";
 
 const imageTypes = ["image/jpg", "image/jpeg", "image/png", "image/webp"];
 
@@ -101,7 +102,18 @@ const FormPet = () => {
     return (
         <form onSubmit={handleSubmit(sendForm)}>
             <div className="w-full h-full flex flex-col gap-8 items-center p-6 sm:p-6 md:p-8">
-                <div className="font-bold text-4xl text-black">Cadastrar Pet</div>
+                <div className="flex w-full items-center">
+                    <button
+                        onClick={() => {
+                            navigate("/gerenciar", { state: { cardTypes: "Pets" } });
+                        }}
+                    >
+                        <FaArrowLeft className="text-[200%]" />
+                    </button>
+                    <h1 className="font-bold text-4xl text-black mx-auto">
+                        {!location.state?.obj ? "Cadastrar" : "Editar"} Pet
+                    </h1>
+                </div>
                 <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
                         Nome <span className="text-red-500">*</span>

@@ -39,12 +39,12 @@ interface Pets {
 }
 
 interface Form {
-    tipoAtendimento: string
-    responsavel: string
-    pet: string
-    descricao: string
-    date: string
-    id?: number
+    tipoAtendimento: string;
+    responsavel: string;
+    pet: string;
+    descricao: string;
+    date: string;
+    id?: number;
 }
 
 const FormAtendimento = () => {
@@ -70,7 +70,13 @@ const FormAtendimento = () => {
 
     const sendForm = async (data: DataType) => {
         try {
-            const form: Form = { tipoAtendimento: "", responsavel: "", pet: "", descricao: "Sem descrição", date: "" }
+            const form: Form = {
+                tipoAtendimento: "",
+                responsavel: "",
+                pet: "",
+                descricao: "Sem descrição",
+                date: "",
+            };
             if (location.state?.obj) {
                 form.id = location.state?.obj.id;
             }
@@ -112,7 +118,7 @@ const FormAtendimento = () => {
         });
     }, []);
 
-    useEffect(() => {        
+    useEffect(() => {
         if (!location.state?.obj) return;
         setValue("date", location.state?.obj.date.split("T")[0]);
         setValue("descricao", location.state?.obj.descricao);
@@ -129,12 +135,14 @@ const FormAtendimento = () => {
                 <div className="flex w-full items-center">
                     <button
                         onClick={() => {
-                            navigate("/gerenciar");
+                            navigate("/gerenciar", { state: { cardTypes: "Atendimentos" } });
                         }}
                     >
                         <FaArrowLeft className="text-[200%]" />
                     </button>
-                    <h1 className="font-bold text-4xl text-black mx-auto">Cadastrar Atendimento</h1>
+                    <h1 className="font-bold text-4xl text-black mx-auto">
+                        {!location.state?.obj ? "Cadastrar" : "Editar"} Atendimento
+                    </h1>
                 </div>
                 <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
