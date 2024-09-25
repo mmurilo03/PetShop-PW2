@@ -12,8 +12,8 @@ interface InputProps {
 const Input = (props: InputProps) => {
     return (
         <>
-            <div className={`flex flex-col ${props.size ?? "w-2/5"} gap-2`}>
-                <label className={`${props.styleLabel ?? "text-white text-lg"}`}>{props.label}</label>
+            <div className={`flex flex-col lg:w-[40%] md:w-[50%] xsm:w-[80%] gap-2`}>
+                <label className={"text-white text-lg"}>{props.label}</label>
                 <input
                     className={`${props.style ?? "bg-white py-4 rounded-md w-full pl-2"}`}
                     type={props.type}
