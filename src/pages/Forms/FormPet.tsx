@@ -76,9 +76,9 @@ const FormPet = () => {
 
     return (
         <form onSubmit={handleSubmit(sendForm)}>
-            <div className="w-screen h-screen flex flex-col gap-8 items-center p-6">
+            <div className="w-full h-full flex flex-col gap-8 items-center p-6 sm:p-6 md:p-8">
                 <div className="font-bold text-4xl text-black">Cadastrar Pet</div>
-                <div className="flex flex-col w-[50%]">
+                <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
                         Nome <span className="text-red-500">*</span>
                     </label>
@@ -90,7 +90,7 @@ const FormPet = () => {
                     />
                     <p className="text-red-700">{errors.nome?.message}</p>
                 </div>
-                <div className="flex flex-col w-[50%]">
+                <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
                         Tutor <span className="text-red-500">*</span>
                     </label>
@@ -102,7 +102,7 @@ const FormPet = () => {
                     />
                     <p className="text-red-700">{errors.tutor?.message}</p>
                 </div>
-                <div className="flex flex-col w-[50%]">
+                <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
                         Telefone <span className="text-red-500">*</span>
                     </label>
@@ -114,7 +114,7 @@ const FormPet = () => {
                     />
                     <p className="text-red-700">{errors.telefone?.message}</p>
                 </div>
-                <div className="flex flex-col w-[50%]">
+                <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
                         Endereço <span className="text-red-500">*</span>
                     </label>
@@ -139,7 +139,7 @@ const FormPet = () => {
                         {!formContext.endereco ? (
                             <Map
                                 mapId={"map"}
-                                style={{ width: "40vw", height: "20vh" }}
+                                style={{ width: "48vw", height: "20vh" }}
                                 defaultCenter={{ lat: -6.889592332521834, lng: -38.545227971136384 }}
                                 defaultZoom={14}
                                 gestureHandling={"greedy"}
@@ -148,7 +148,7 @@ const FormPet = () => {
                         ) : (
                             <Map
                                 mapId={"map"}
-                                style={{ width: "40vw", height: "20vh" }}
+                                style={{ width: "48vw", height: "20vh" }}
                                 defaultCenter={{
                                     lat: Number(formContext.endereco.split("|")[0]),
                                     lng: Number(formContext.endereco.split("|")[1]),
@@ -168,7 +168,7 @@ const FormPet = () => {
                     </APIProvider>
                 </button>
 
-                <div className="flex flex-col w-[50%]">
+                <div className="flex flex-col w-full sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
                         Imagem <span className="text-red-500">*</span>
                     </label>
@@ -181,7 +181,7 @@ const FormPet = () => {
                 </div>
 
                 <div className="pt-8">
-                    <Button className="bg-primaria text-white p-4 px-32" text="Salvar" />
+                    <Button className="bg-primaria text-white p-4 px-32 sm:px-24 md:px-32" text="Salvar" />
                 </div>
             </div>
         </form>
