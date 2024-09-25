@@ -112,14 +112,14 @@ const Home = () => {
     return (
         <>
             <Navbar />
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center xsm:flex-col md:flex-col lg:flex-row">
                 <div className="flex items-center p-4 py-6 gap-3">
                     <BsHouse className="text-[500%]" />
                     <h1 className="text-[150%]">Página Inicial</h1>
                 </div>
                 <div className="px-10">
                     <Search
-                        width="w-[50rem]"
+                        width="lg:w-[50rem] md:w-[40rem] xsm:w-[25rem]"
                         onChange={(text) => {
                             setAtendimentoPage(0);
                             setResponsaveisPage(0);
@@ -171,8 +171,8 @@ const Home = () => {
                     />
                 </div>
             </div>
-            <div className="flex justify-between items-center p-4">
-                <div className="flex items-center gap-10 font-bold">
+            <div className="flex justify-between items-center p-4 xsm:flex-col md:flex-col lg:flex-row xsm:gap-8 md:gap-4 lg:gap-0">
+                <div className="flex items-center gap-10 font-bold xsm:flex-col md:flex-col lg:flex-row xsm:w-full md:w-full lg:w-[80%]">
                     <ButtonTab
                         text="Atendimentos"
                         color={cardTypes == "Atendimentos" ? "primaria" : ""}
