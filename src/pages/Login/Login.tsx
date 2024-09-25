@@ -38,8 +38,8 @@ const Login = () => {
 
     return (
         <div className="bg-primaria w-screen h-screen flex flex-col gap-8 items-center">
-            <div className="pt-14">
-                <LogoHorizontal />
+            <div className="flex justify-center pt-14">
+                <LogoHorizontal width="80%" />
             </div>
             <div className="font-bold text-7xl text-white pb-14 pt-24">Login</div>
             <Input value={email} onChange={(value) => setEmail(value)} label="Email" type="email"></Input>
@@ -50,7 +50,7 @@ const Login = () => {
                 type="password"
             ></Input>
             <div className="pt-8">
-                <Button className="bg-white text-primaria p-6 px-44" text="Login" onClick={() => sendForm()} />
+                <Button className="bg-white text-primaria p-6 md:px-40 lg:px-44 xsm:px-24" text="Login" onClick={() => sendForm()} />
             </div>
         </div>
     );
