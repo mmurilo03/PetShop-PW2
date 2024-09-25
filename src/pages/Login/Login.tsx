@@ -25,7 +25,7 @@ const Login = () => {
                 user.id = data.id;
                 user.imagem = data.imagem;
                 user.nome = data.nome;
-                user.telefone = data;
+                user.telefone = data.telefone;
 
                 cookie.set("token", data.token, { path: "/" });
                 cookie.set("user", user, { path: "/" });
