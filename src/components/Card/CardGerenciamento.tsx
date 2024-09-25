@@ -66,7 +66,7 @@ const CardGerenciamento = (props: CardProps) => {
 
     const [image, setImage] = useState("");
     const [loading, setLoading] = useState(true);
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(true);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     const getImage = async () => {
         let hasImage = false;
