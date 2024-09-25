@@ -82,6 +82,7 @@ const Navbar = () => {
                                 onClick={() => {
                                     cards.cardTypes = "Pets";
                                     navigate("/gerenciar", { state: { cardTypes: "Pets" } });
+                                    window.location.reload()
                                 }}
                             >
                                 <FaCat />
@@ -94,6 +95,7 @@ const Navbar = () => {
                                 onClick={() => {
                                     cards.cardTypes = "Responsáveis";
                                     navigate("/gerenciar", { state: { cardTypes: "Responsáveis" } });
+                                    window.location.reload()
                                 }}
                             >
                                 <FaUserDoctor />
@@ -106,6 +108,7 @@ const Navbar = () => {
                                 onClick={() => {
                                     cards.cardTypes = "Atendimentos";
                                     navigate("/gerenciar", { state: { cardTypes: "Atendimentos" } });
+                                    window.location.reload()
                                 }}
                             >
                                 <FaClipboard />
@@ -117,6 +120,7 @@ const Navbar = () => {
                                 className="flex flex-col items-center"
                                 onClick={() => {
                                     navigate("/home", { state: { cardTypes: cards.cardTypes } });
+                                    window.location.reload()
                                 }}
                             >
                                 <FaHome />
