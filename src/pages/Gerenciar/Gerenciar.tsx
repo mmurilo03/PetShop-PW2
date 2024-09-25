@@ -109,7 +109,7 @@ const Gerenciar = () => {
                 
                 break;
             case "Responsáveis":
-                
+                navigate("/gerenciar/form/responsavel")
                 break;
             case "Pets":
                 navigate("form/pet")
