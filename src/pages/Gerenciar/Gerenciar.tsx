@@ -106,18 +106,40 @@ const Gerenciar = () => {
     const goToFormPage = () => {
         switch (cardTypes) {
             case "Atendimentos":
-                navigate("/gerenciar/form/atendimento")
+                navigate("/gerenciar/form/atendimento");
                 break;
             case "Responsáveis":
-                navigate("/gerenciar/form/responsavel")
+                navigate("/gerenciar/form/responsavel");
                 break;
             case "Pets":
-                navigate("form/pet")
+                navigate("form/pet");
                 break;
             default:
                 break;
         }
-    }
+    };
+
+    const deleteObj = async (id: number) => {
+        switch (cardTypes) {
+            case "Atendimentos":
+                await api.delete(`atendimento/delete/${id}`);
+                loadAtendimentos();
+                navigate("/gerenciar");
+                break;
+            case "Responsáveis":
+                await api.delete(`responsavel/delete${id}`);
+                loadResponsaveis();
+                navigate("/gerenciar");
+                break;
+            case "Pets":
+                await api.delete(`pet/delete/${id}`);
+                loadPets();
+                navigate("/gerenciar");
+                break;
+            default:
+                break;
+        }
+    };
 
     useEffect(() => {
         loadAtendimentos();
@@ -269,6 +291,11 @@ const Gerenciar = () => {
                             .map((value) => {
                                 return (
                                     <CardGerenciamento
+                                        onDelete={() => {
+                                            deleteObj(value.id);
+                                        }}
+                                        type="atendimento"
+                                        id={value.id}
                                         img={value.imagem}
                                         nome={value.nome}
                                         pet={false}
@@ -290,6 +317,11 @@ const Gerenciar = () => {
                             .map((value) => {
                                 return (
                                     <CardGerenciamento
+                                        onDelete={() => {
+                                            deleteObj(value.id);
+                                        }}
+                                        type="responsavel"
+                                        id={value.id}
                                         img={value.imagem}
                                         nome={value.nome}
                                         pet={false}
@@ -307,6 +339,11 @@ const Gerenciar = () => {
                             .map((value) => {
                                 return (
                                     <CardGerenciamento
+                                        onDelete={() => {
+                                            deleteObj(value.id);
+                                        }}
+                                        type="pet"
+                                        id={value.id}
                                         img={value.imagem}
                                         nome={value.nome}
                                         pet={false}

@@ -1,5 +1,5 @@
 import Button from "../../components/Button/Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { api } from "../../api/api";
 import Cookies from "universal-cookie";
 import { useForm } from "react-hook-form";
@@ -38,11 +38,21 @@ interface Pets {
     tutor: string;
 }
 
+interface Form {
+    tipoAtendimento: string
+    responsavel: string
+    pet: string
+    descricao: string
+    date: string
+    id?: number
+}
+
 const FormAtendimento = () => {
     const {
         register,
         handleSubmit,
         formState: { errors },
+        setValue,
     } = useForm<DataType>({ resolver: zodResolver(schema) });
 
     const [responsaveis, setResponsaveis] = useState<Responsaveis[]>([]);
@@ -51,6 +61,7 @@ const FormAtendimento = () => {
     const [petsFiltered, setPetsFiltered] = useState<Pets[]>([]);
 
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
 
     const cookie = new Cookies();
     const token = cookie.get("token");
@@ -59,14 +70,21 @@ const FormAtendimento = () => {
 
     const sendForm = async (data: DataType) => {
         try {
-            const form = { tipoAtendimento: "", responsavel: "", pet: "", descricao: "Sem descrição", date: ""}
+            const form: Form = { tipoAtendimento: "", responsavel: "", pet: "", descricao: "Sem descrição", date: "" }
+            if (location.state?.obj) {
+                form.id = location.state?.obj.id;
+            }
             form.tipoAtendimento = data.tipoAtendimento;
             form.responsavel = data.responsavel;
             form.pet = data.pet;
             form.descricao = data.descricao.length > 0 ? data.descricao : "Sem descrição";
             form.date = data.date;
 
-            await api.post("/atendimento/create", form);
+            if (location.state?.obj) {
+                await api.patch("/atendimento/edit", form);
+            } else {
+                await api.post("/atendimento/create", form);
+            }
 
             navigate("/gerenciar", { state: { cardTypes: "Atendimentos" } });
         } catch (e) {
@@ -94,6 +112,15 @@ const FormAtendimento = () => {
         });
     }, []);
 
+    useEffect(() => {        
+        if (!location.state?.obj) return;
+        setValue("date", location.state?.obj.date.split("T")[0]);
+        setValue("descricao", location.state?.obj.descricao);
+        setValue("pet", `${location.state?.obj.petId}`);
+        setValue("responsavel", `${location.state?.obj.responsavelId}`);
+        setValue("tipoAtendimento", location.state?.obj.tipoAtendimento);
+    }, []);
+
     if (loading) return <></>;
 
     return (
@@ -102,12 +129,12 @@ const FormAtendimento = () => {
                 <div className="flex w-full items-center">
                     <button
                         onClick={() => {
-                            navigate(-1);
+                            navigate("/gerenciar");
                         }}
                     >
                         <FaArrowLeft className="text-[200%]" />
                     </button>
-                    <h1 className="font-bold text-4xl text-black mx-auto">Cadastrar Pet</h1>
+                    <h1 className="font-bold text-4xl text-black mx-auto">Cadastrar Atendimento</h1>
                 </div>
                 <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
@@ -205,7 +232,7 @@ const FormAtendimento = () => {
                 </div>
                 <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
-                        Senha <span className="text-red-500">*</span>
+                        Data <span className="text-red-500">*</span>
                     </label>
                     <input
                         {...register("date")}
