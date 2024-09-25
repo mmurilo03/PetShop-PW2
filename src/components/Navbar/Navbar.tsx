@@ -36,6 +36,9 @@ const Navbar = () => {
                 <Button
                     className="p-3 px-3 text-white hover:text-primaria border hover:bg-white"
                     text="Meu Perfil"
+                    onClick={() => {
+                        navigate("/editar-perfil");
+                    }}
                 />
                 <Button
                     className="p-3 px-3 text-white hover:text-primaria border hover:bg-white"

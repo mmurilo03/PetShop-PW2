@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaArrowLeft } from "react-icons/fa";
+import { useContext, useEffect } from "react";
+import { AuthContext, getUser } from "../../components/Context/AuthContext";
 
 const imageTypes = ["image/jpg", "image/jpeg", "image/png", "image/webp"];
 
@@ -13,8 +15,12 @@ const schema = z.object({
     nome: z.string({ required_error: "Digite o nome" }).min(1, "Digite o nome"),
     funcao: z.string({ required_error: "Digite a função" }).min(1, "Digite a função"),
     telefone: z.string({ required_error: "Digite o telefone" }).min(1, "Digite o telefone"),
-    email: z.string({ required_error: "Digite o email" }).email("Digite um email válido").min(1, "Digite o email"),
-    senha: z.string({ required_error: "Digite a senha" }).min(1, "Digite a senha"),
+    email: z
+        .string({ required_error: "Digite o email" })
+        .email("Digite um email válido")
+        .min(1, "Digite o email"),
+    senhaAntiga: z.string({ required_error: "Digite a senha antiga" }).min(1, "Digite a senha antiga"),
+    senhaNova: z.string({ required_error: "Digite a senha" }).min(1, "Digite a senha"),
     imagem: z
         .instanceof(FileList, { fatal: true, message: "Imagem obrigatória" })
         .refine((files) => files?.length === 1, "Imagem obrigatória")
@@ -23,15 +29,16 @@ const schema = z.object({
 
 type DataType = z.infer<typeof schema>;
 
-const FormResponsavel = () => {
-
+const EditResponsavel = () => {
     const {
         register,
         handleSubmit,
         formState: { errors },
+        setValue,
     } = useForm<DataType>({ resolver: zodResolver(schema) });
 
     const cookie = new Cookies();
+    const user = useContext(AuthContext);
 
     const navigate = useNavigate();
 
@@ -43,34 +50,58 @@ const FormResponsavel = () => {
             const config = {
                 headers: { "content-type": "multipart/form-data" },
             };
+
+            const tempUser = getUser();
+            form.append("id", `${tempUser.id}`);
             form.append("nome", data.nome);
             form.append("funcao", data.funcao);
             form.append("telefone", data.telefone);
             form.append("email", data.email);
-            form.append("senha", data.senha);
+            form.append("senhaAntiga", data.senhaAntiga);
+            form.append("senhaNova", data.senhaNova);
             form.append("image", img);
 
             api.defaults.headers.common.Authorization = cookie.get("token");
 
-            await api.post("/responsavel/create", form, config);
+            const responsavelEdited = (await api.patch("/responsavel/edit", form, config)).data
+                .responsavelEdited;
 
-            navigate("/gerenciar", { state: { cardTypes: "Responsáveis" } });
+            user.email = responsavelEdited.email;
+            user.funcao = responsavelEdited.funcao;
+            user.id = responsavelEdited.id;
+            user.imagem = responsavelEdited.imagem;
+            user.nome = responsavelEdited.nome;
+            user.telefone = responsavelEdited.telefone;
+
+            cookie.set("user", user, { path: "/" });
+
+            navigate("/home", { state: { cardTypes: "Atendimentos" } });
         } catch (e) {
             console.log(e);
         }
     };
 
+    useEffect(() => {
+        const tempUser = getUser();
+        setValue("email", tempUser.email);
+        setValue("funcao", tempUser.funcao);
+        setValue("nome", tempUser.nome);
+        setValue("telefone", tempUser.telefone);
+    }, []);
+
     return (
         <form onSubmit={handleSubmit(sendForm)}>
             <div className="w-full h-full flex flex-col gap-8 items-center p-6 sm:p-6 md:p-8">
                 <div className="flex w-full items-center">
-                <button onClick={() => {
-                    navigate("/gerenciar", { state: { cardTypes: "Responsáveis" } })
-                }}>
-                    <FaArrowLeft className="text-[200%]" />
-                </button>
-                <h1 className="font-bold text-4xl text-black mx-auto">Cadastrar Pet</h1>
-            </div>
+                    <button
+                        onClick={() => {
+                            navigate("/gerenciar");
+                        }}
+                    >
+                        <FaArrowLeft className="text-[200%]" />
+                    </button>
+                    <h1 className="font-bold text-4xl text-black mx-auto">Editar perfil</h1>
+                </div>
                 <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
                         Nome <span className="text-red-500">*</span>
@@ -121,15 +152,27 @@ const FormResponsavel = () => {
                 </div>
                 <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
-                        Senha <span className="text-red-500">*</span>
+                        Senha antiga <span className="text-red-500">*</span>
                     </label>
                     <input
-                        {...register("senha")}
+                        {...register("senhaAntiga")}
+                        type="password"
+                        className="border shadow-lg py-4 rounded-md pl-2"
+                        placeholder="Digite a senha antiga"
+                    />
+                    <p className="text-red-700">{errors.senhaAntiga?.message}</p>
+                </div>
+                <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
+                    <label className="font-bold">
+                        Senha nova <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        {...register("senhaNova")}
                         type="password"
                         className="border shadow-lg py-4 rounded-md pl-2"
                         placeholder="Digite a senha"
                     />
-                    <p className="text-red-700">{errors.senha?.message}</p>
+                    <p className="text-red-700">{errors.senhaNova?.message}</p>
                 </div>
                 <div className="flex flex-col w-full sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
@@ -151,4 +194,4 @@ const FormResponsavel = () => {
     );
 };
 
-export default FormResponsavel;
+export default EditResponsavel;

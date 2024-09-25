@@ -10,6 +10,7 @@ import FormPet from "./pages/Forms/FormPet.tsx";
 import MapPage from "./pages/MapPage/MapPage.tsx";
 import FormResponsavel from "./pages/Forms/FormResponsavel.tsx";
 import FormAtendimento from "./pages/Forms/FormAtendimento.tsx";
+import EditResponsavel from "./pages/Forms/EditResponsavel.tsx";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
@@ -23,6 +24,7 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="/gerenciar/form/pet/map" element={<MapPage />} />
                 <Route path="/gerenciar/form/responsavel" element={<FormResponsavel />} />
                 <Route path="/gerenciar/form/atendimento" element={<FormAtendimento />} />
+                <Route path="/editar-perfil" element={<EditResponsavel />} />
             </Routes>
         </BrowserRouter>
     </StrictMode>
