@@ -15,8 +15,13 @@ export default {
         },
         width: {
             100: "38rem",
+        },
+        screens:{
+          xsm: '320px',
         }
       },
     },
-    plugins: [],
+    plugins: [
+      require("tailwindcss-animate"),
+    ],
   }

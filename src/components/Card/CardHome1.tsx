@@ -3,6 +3,7 @@ import { IoLocationSharp } from "react-icons/io5";
 import { api } from "../../api/api";
 import Cookies from "universal-cookie";
 import { useEffect, useState } from "react";
+import Loading from "../Loading/Loading";
 
 interface CardProps {
     id: number;
@@ -63,9 +64,9 @@ const CardHome1 = (props: CardProps) => {
                 setAtendimento((atendimento) => {
                     return { ...atendimento, imagem: image } as Atendimento;
                 });
-                setLoading(false);
             } catch (error) {}
         }
+        setLoading(false);
     };
 
     const getAtendimento = async () => {
@@ -84,11 +85,11 @@ const CardHome1 = (props: CardProps) => {
         getAtendimento();
     }, [loading]);
 
-    if (loading) return <></>;
+    if (loading) return <Loading/>;
 
     return (
         <>
-            <div className="w-80">
+            <div className="w-80 animate-in zoom-in-75">
                 <img className="rounded-lg object-cover h-48 w-80" src={atendimento!.imagem} />
                 <div className="flex flex-row justify-between text-[90%]">
                     <div className="p-1 gap-2 flex w-[48%] items-center">

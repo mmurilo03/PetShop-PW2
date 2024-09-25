@@ -4,6 +4,7 @@ import { FaUserDoctor } from "react-icons/fa6";
 import Cookies from "universal-cookie";
 import { api } from "../../api/api";
 import { useNavigate } from "react-router-dom";
+import Loading from "../Loading/Loading";
 
 interface Tags {
     [propName: string]: string;
@@ -15,7 +16,7 @@ interface CardProps {
     img: string;
     nome: string;
     pet: boolean;
-    onDelete: () => void
+    onDelete: () => void;
     tags: Tags;
 }
 
@@ -90,9 +91,9 @@ const CardGerenciamento = (props: CardProps) => {
             try {
                 const image = api.getUri({ url: `images/${imageName}` });
                 setImage(image);
-                setLoading(false);
             } catch (error) {}
         }
+        setLoading(false);
     };
 
     const goToFormPage = async () => {
@@ -117,16 +118,16 @@ const CardGerenciamento = (props: CardProps) => {
 
     useEffect(() => {
         getImage();
-    }, []);
+    }, [image]);
 
-    if (loading) <></>;
+    if (loading) return <Loading />;
 
     return (
         <>
-            <div className="flex flex-row w-96 h-32 rounded-lg shadow-lg">
-                <img className="rounded-l-lg h-32" src={image} />
+            <div className="flex flex-row lg:w-96 md:w-96 xsm:w-[80vw] truncate h-32 rounded-lg shadow-lg animate-in zoom-in-75">
+                <img className="rounded-l-lg xsm:h-[60%] lg:h-32 md:h-32" src={image} />
                 <div className="flex flex-col text-[90%] w-full">
-                    <div className="flex ml-52 gap-2 pr-2">
+                    <div className="flex gap-2 pr-2 xsm:pl-2 md:pl-52 lg:pl-52">
                         <button
                             onClick={() => {
                                 goToFormPage();
@@ -134,9 +135,12 @@ const CardGerenciamento = (props: CardProps) => {
                         >
                             <FaPencilAlt />
                         </button>
-                        <button className="text-red-500" onClick={() => {
-                            props.onDelete();
-                        }}>
+                        <button
+                            className="text-red-500"
+                            onClick={() => {
+                                props.onDelete();
+                            }}
+                        >
                             <FaRegTrashAlt />
                         </button>
                     </div>

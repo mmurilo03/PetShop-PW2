@@ -149,16 +149,17 @@ const Gerenciar = () => {
 
     return (
         <>
-            <Navbar />
-            <div className="flex justify-between items-center">
+        <Navbar/>
+            <div className="flex md:flex-row xsm:flex-col justify-between items-center pt-4 animate-in fade-in-20">
                 <div className="flex items-center p-4 py-6 gap-3">
                     {cardTypes == "Atendimentos" ? <FaRegClipboard className="text-[500%]" /> : <></>}
                     {cardTypes == "Responsáveis" ? <FaUserDoctor className="text-[500%]" /> : <></>}
                     {cardTypes == "Pets" ? <FaCat className="text-[500%]" /> : <></>}
                     <h1 className="text-[150%]">Gerenciar {cardTypes}</h1>
                 </div>
-                <div className="flex px-10 gap-2 items-center">
+                <div className="flex px-10 gap-2 lg:flex-row xsm:flex-col md:flex-col items-center">
                     <Search
+                    width="w-full"
                         onChange={(text) => {
                             setAtendimentoPage(0);
                             setResponsaveisPage(0);
@@ -215,9 +216,9 @@ const Gerenciar = () => {
                     />
                 </div>
             </div>
-            <div className="flex justify-between items-center p-4">
-                <div className="flex items-center gap-10 font-bold">
-                    <ButtonTab
+            <div className="flex justify-between xsm:gap-14 xsm:w-screen lg:flex-row md:flex-col xsm:flex-col items-center p-8">
+                <div className="flex items-center gap-10 lg:flex-row md:flex-col xsm:flex-col font-bold">
+                <ButtonTab
                         text="Atendimentos"
                         color={cardTypes == "Atendimentos" ? "primaria" : ""}
                         icon={<FaRegClipboard />}
