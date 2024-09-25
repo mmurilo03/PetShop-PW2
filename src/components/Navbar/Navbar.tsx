@@ -58,11 +58,12 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="p-8 bg-primaria flex items-center text-white justify-between z-1">
+            <nav className="p-8 h-full w-full bg-primaria flex items-center text-white justify-between z-1 lg:flex-row md:flex-col xsm:flex-col">
                 <div className="w-44">
-                    <LogoHorizontal width="300" height="40" />
+                    <LogoHorizontal width="100%" height="40" />
                 </div>
-                <div className="flex flex-row-reverse gap-8 items-center">
+
+                <div className="flex flex-row-reverse items-center xsm:flex-col lg:flex-row-reverse lg:gap-64 md:gap-4 xsm:gap-8 md:flex-col">
                     <div className="flex flex-col items-center">
                         <button
                             className="text-4xl text-primaria bg-white p-2 rounded-full"
@@ -74,7 +75,7 @@ const Navbar = () => {
                         </button>
                         <p>{user.nome}</p>
                     </div>
-                    <div className="text-4xl pr-14 flex flex-row-reverse gap-8">
+                    <div className="text-4xl flex items-center gap-8 lg:flex-row-reverse md:flex-col md:w-[50%] xsm:flex-col xsm:w-[50%]">
                         <div>
                             <button
                                 className="flex flex-col items-center"

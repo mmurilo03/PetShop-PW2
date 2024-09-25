@@ -62,10 +62,10 @@ const CardGerenciamento = (props: CardProps) => {
 
     return (
         <>
-            <div className="flex flex-row w-96 h-32 rounded-lg shadow-lg">
-                <img className="rounded-l-lg h-32" src={image} />
+            <div className="flex flex-row lg:w-96 md:w-96 xsm:w-[80vw] truncate h-32 rounded-lg shadow-lg">
+                <img className="rounded-l-lg xsm:h-[60%] lg:h-32 md:h-32" src={image} />
                 <div className="flex flex-col text-[90%] w-full">
-                    <div className="flex ml-52 gap-2 pr-2">
+                    <div className="flex gap-2 pr-2 xsm:pl-2 md:pl-[60%] lg:pl-[60%]">
                         <button>
                             <FaPencilAlt />
                         </button>
