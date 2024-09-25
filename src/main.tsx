@@ -6,6 +6,8 @@ import './index.css'
 import Login from './pages/Login/Login.tsx'
 import Home from './pages/Home/Home.tsx'
 import Gerenciar from './pages/Gerenciar/Gerenciar.tsx'
+import FormPet from './pages/Forms/FormPet.tsx'
+import MapPage from './pages/MapPage/MapPage.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -15,6 +17,8 @@ createRoot(document.getElementById('root')!).render(
         <Route path='/login' element={<Login />} />
         <Route path='/home' element={<Home />} />
         <Route path='/gerenciar' element={<Gerenciar />} />
+        <Route path='/gerenciar/form/pet' element={<FormPet />} />
+        <Route path='/gerenciar/form/pet/map' element={<MapPage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
