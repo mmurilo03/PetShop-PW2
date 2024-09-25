@@ -128,7 +128,7 @@ const Gerenciar = () => {
     return (
         <>
         <Navbar/>
-            <div className="flex md:flex-row xsm:flex-col justify-between items-center pt-4">
+            <div className="flex md:flex-row xsm:flex-col justify-between items-center pt-4 animate-in fade-in-20">
                 <div className="flex items-center p-4 py-6 gap-3">
                     {cardTypes == "Atendimentos" ? <FaRegClipboard className="text-[500%]" /> : <></>}
                     {cardTypes == "Responsáveis" ? <FaUserDoctor className="text-[500%]" /> : <></>}
