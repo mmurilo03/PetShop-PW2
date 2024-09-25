@@ -106,7 +106,7 @@ const Gerenciar = () => {
     const goToFormPage = () => {
         switch (cardTypes) {
             case "Atendimentos":
-                
+                navigate("/gerenciar/form/atendimento")
                 break;
             case "Responsáveis":
                 navigate("/gerenciar/form/responsavel")
