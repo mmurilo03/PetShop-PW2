@@ -1,5 +1,5 @@
 import Button from "../../components/Button/Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { api } from "../../api/api";
 import Cookies from "universal-cookie";
 import { useForm } from "react-hook-form";
@@ -26,6 +26,7 @@ type DataType = z.infer<typeof schema>;
 
 const FormPet = () => {
     const formContext = useContext(FormContext);
+    const location = useLocation();
 
     const {
         register,
@@ -48,6 +49,9 @@ const FormPet = () => {
             const config = {
                 headers: { "content-type": "multipart/form-data" },
             };
+            if (location.state?.obj) {
+                form.append("id", location.state?.obj.id);
+            }
             form.append("nome", data.nome);
             form.append("tutor", data.tutor);
             form.append("telefone", data.telefone);
@@ -56,7 +60,11 @@ const FormPet = () => {
 
             api.defaults.headers.common.Authorization = cookie.get("token");
 
-            await api.post("/pet/create", form, config);
+            if (location.state?.obj) {
+                await api.patch("/pet/edit", form, config);
+            } else {
+                await api.post("/pet/create", form, config);
+            }
 
             navigate("/gerenciar", { state: { cardTypes: "Pets" } });
         } catch (e) {
@@ -73,6 +81,22 @@ const FormPet = () => {
         setValue("tutor", formContext.tutor ?? "");
         setValue("telefone", formContext.telefone ?? "");
     }, [formContext.endereco]);
+
+    useEffect(() => {
+        if (!location.state?.obj) return;
+
+        formContext.nome = location.state?.obj.nome;
+        formContext.telefone = location.state?.obj.telefone;
+        formContext.tutor = location.state?.obj.tutor;
+        formContext.endereco = location.state?.obj.endereco;
+
+        setValue("endereco", location.state?.obj.endereco);
+        setError("endereco", { message: "" });
+
+        setValue("nome", location.state?.obj.nome ?? "");
+        setValue("tutor", location.state?.obj.tutor ?? "");
+        setValue("telefone", location.state?.obj.telefone ?? "");
+    }, []);
 
     return (
         <form onSubmit={handleSubmit(sendForm)}>

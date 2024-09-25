@@ -65,7 +65,7 @@ const FormResponsavel = () => {
             <div className="w-full h-full flex flex-col gap-8 items-center p-6 sm:p-6 md:p-8">
                 <div className="flex w-full items-center">
                 <button onClick={() => {
-                    navigate(-1)
+                    navigate("/gerenciar")
                 }}>
                     <FaArrowLeft className="text-[200%]" />
                 </button>
