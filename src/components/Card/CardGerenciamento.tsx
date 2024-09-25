@@ -65,9 +65,9 @@ const CardGerenciamento = (props: CardProps) => {
             <div className="flex flex-row w-96 h-32 rounded-lg shadow-lg">
                 <img className="rounded-l-lg h-32" src={image} />
                 <div className="flex flex-col text-[90%] w-full">
-                    <div className="flex justify-end gap-2 pr-2">
+                    <div className="flex ml-52 gap-2 pr-2">
                         <button>
-                            <FaPencilAlt />{" "}
+                            <FaPencilAlt />
                         </button>
                         <button className="text-red-500">
                             <FaRegTrashAlt />
@@ -75,11 +75,11 @@ const CardGerenciamento = (props: CardProps) => {
                     </div>
                     <div className="p-1 px-2 gap-2 flex items-center">
                         <div className="text-[90%]">{props.pet ? <FaUserDoctor /> : <FaPaw />}</div>
-                        <p className="overflow-hidden text-ellipsis">{props.nome}</p>
+                        <p className="overflow-hidden text-ellipsis w-[70%] truncate">{props.nome}</p>
                     </div>
                     {cont.map((value) => (
                         <div key={value} className="px-2 flex items-center">
-                            <p className="overflow-hidden text-ellipsis">{value}</p>
+                            <p className="overflow-hidden text-ellipsis w-[70%] truncate">{value}</p>
                         </div>
                     ))}
                 </div>

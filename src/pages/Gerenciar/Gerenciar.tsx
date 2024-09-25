@@ -9,7 +9,7 @@ import Cookies from "universal-cookie";
 import ButtonIcon from "../../components/Button/ButtonIcon";
 import CardGerenciamento from "../../components/Card/CardGerenciamento";
 import Button from "../../components/Button/Button";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface Atendimento {
     data: string;
@@ -54,6 +54,7 @@ const Gerenciar = () => {
     const [responsaveisPage, setResponsaveisPage] = useState(0);
     const [petsPage, setPetsPage] = useState(0);
     const location = useLocation();
+    const navigate = useNavigate();
 
     const pageSize = 9;
 
@@ -101,6 +102,22 @@ const Gerenciar = () => {
                 return 0;
         }
     };
+
+    const goToFormPage = () => {
+        switch (cardTypes) {
+            case "Atendimentos":
+                
+                break;
+            case "Responsáveis":
+                
+                break;
+            case "Pets":
+                navigate("form/pet")
+                break;
+            default:
+                break;
+        }
+    }
 
     useEffect(() => {
         loadAtendimentos();
@@ -172,6 +189,7 @@ const Gerenciar = () => {
                     <Button
                         className="bg-primaria-lighter text-white h-14 w-80"
                         text={`+ Cadastrar ${cardTypes}`}
+                        onClick={goToFormPage}
                     />
                 </div>
             </div>
