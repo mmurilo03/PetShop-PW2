@@ -75,7 +75,7 @@ const Navbar = () => {
                         </button>
                         <p>{user.nome}</p>
                     </div>
-                    <div className="text-4xl flex items-center gap-8 lg:flex-row md:flex-col md:w-[50%] xsm:flex-col xsm:w-[50%]">
+                    <div className="text-4xl flex items-center gap-8 lg:flex-row-reverse md:flex-col md:w-[50%] xsm:flex-col xsm:w-[50%]">
                         <div>
                             <button
                                 className="flex flex-col items-center"
