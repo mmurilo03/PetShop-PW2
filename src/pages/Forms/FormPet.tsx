@@ -167,7 +167,6 @@ const FormPet = () => {
                         formContext.nome = getValues("nome");
                         formContext.tutor = getValues("tutor");
                         formContext.telefone = getValues("telefone");
-                        console.log(getValues("imagem"));
                         navigate("map");
                     }}
                 >

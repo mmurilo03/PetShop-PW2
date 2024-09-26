@@ -2,7 +2,7 @@ import { FaCat } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import Cookies from "universal-cookie";
 import { api } from "../../api/api";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Loading from "../Loading/Loading";
 
 interface Tags {
@@ -17,13 +17,11 @@ interface CardProps {
 }
 
 const CardHome2 = (props: CardProps) => {
-    const cont = [""];
+    const [cont, setCont] = useState<string[]>([]);
     const [image, setImage] = useState("");
     const [loading, setLoading] = useState(true);
-
-    for (let tag of Object.keys(props.tags)) {
-        cont.push(`${tag}: ${props.tags[tag]}`);
-    }
+    const requestAddress = useRef(true);
+    const [hasAddress, setHasAddress] = useState(false);
 
     const getImage = async () => {
         let hasImage = false;
@@ -49,11 +47,44 @@ const CardHome2 = (props: CardProps) => {
         setLoading(false)
     };
 
+    const getEndereco = async (lat: string, lng: string) => {
+        const cookie = new Cookies();
+        const token = cookie.get("token");
+        api.defaults.headers.common.Authorization = token;
+
+        try {
+            const endereco = (await api.post("/pet/endereco", { lat: lat, lng: lng })).data.address;
+            setCont((prev) => {
+                const temp = [...prev];
+                temp.push(`Endereço: ${endereco}`);
+                return temp;
+            });
+            setHasAddress(true);
+        } catch (e) {}
+    };
+
     useEffect(() => {
+        if (requestAddress.current) {
+            requestAddress.current = false
+            for (let tag of Object.keys(props.tags)) {
+                if (tag == "Endereço") {
+                    const lat = props.tags[tag].split("|")[0];
+                    const lng = props.tags[tag].split("|")[1];
+                    getEndereco(lat, lng);
+                } else {
+                    setCont((prev) => {
+                        const temp = [...prev];
+                        temp.push(`${tag}: ${props.tags[tag]}`);
+                        return temp;
+                    });
+                }
+            }
+            setHasAddress(true)
+        }
         getImage();
     }, [image]);
 
-    if (loading) return <Loading/>;
+    if (loading || !hasAddress) return <Loading />;
 
     return (
         <>
