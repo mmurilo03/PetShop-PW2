@@ -144,6 +144,7 @@ const Gerenciar = () => {
     };
 
     useEffect(() => {
+        if (!token) navigate("/login");
         loadAtendimentos();
         loadResponsaveis();
         loadPets();

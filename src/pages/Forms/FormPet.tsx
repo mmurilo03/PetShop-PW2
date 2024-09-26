@@ -39,7 +39,7 @@ const FormPet = () => {
     } = useForm<DataType>({ resolver: zodResolver(schema) });
 
     const cookie = new Cookies();
-
+    const token = cookie.get("token");
     const navigate = useNavigate();
 
     const sendForm = async (data: DataType) => {
@@ -84,6 +84,7 @@ const FormPet = () => {
     }, [formContext.endereco]);
 
     useEffect(() => {
+        if (!token) navigate("/login");
         if (!location.state?.obj) return;
 
         formContext.nome = location.state?.obj.nome;
@@ -167,6 +168,7 @@ const FormPet = () => {
                         formContext.nome = getValues("nome");
                         formContext.tutor = getValues("tutor");
                         formContext.telefone = getValues("telefone");
+                        console.log(getValues("imagem"));
                         navigate("map");
                     }}
                 >

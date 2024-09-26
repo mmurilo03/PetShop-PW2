@@ -10,7 +10,7 @@ import { FaUserDoctor } from "react-icons/fa6";
 import Cookies from "universal-cookie";
 import CardHome2 from "../../components/Card/CardHome2";
 import ButtonIcon from "../../components/Button/ButtonIcon";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface Atendimento {
     data: string;
@@ -63,6 +63,7 @@ const Home = () => {
     const cookie = new Cookies();
     const token = cookie.get("token");
     api.defaults.headers.common.Authorization = token;
+    const navigate = useNavigate();
 
     const loadAtendimentos = async () => {
         let atendimentos = (await api.get("/atendimento")).data.atendimentos as Atendimento[];
@@ -104,6 +105,7 @@ const Home = () => {
     };
 
     useEffect(() => {
+        if (!token) navigate("/login");
         loadAtendimentos();
         loadResponsaveis();
         loadPets();

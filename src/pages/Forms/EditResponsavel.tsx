@@ -39,7 +39,7 @@ const EditResponsavel = () => {
 
     const cookie = new Cookies();
     const user = useContext(AuthContext);
-
+    const token = cookie.get("token");
     const navigate = useNavigate();
 
     const sendForm = async (data: DataType) => {
@@ -82,6 +82,7 @@ const EditResponsavel = () => {
     };
 
     useEffect(() => {
+        if (!token) navigate("/login");
         const tempUser = getUser();
         setValue("email", tempUser.email);
         setValue("funcao", tempUser.funcao);

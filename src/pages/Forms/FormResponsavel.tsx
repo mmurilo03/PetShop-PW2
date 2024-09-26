@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaArrowLeft } from "react-icons/fa";
+import { useEffect } from "react";
 
 const imageTypes = ["image/jpg", "image/jpeg", "image/png", "image/webp"];
 
@@ -32,7 +33,7 @@ const FormResponsavel = () => {
     } = useForm<DataType>({ resolver: zodResolver(schema) });
 
     const cookie = new Cookies();
-
+    const token = cookie.get("token");
     const navigate = useNavigate();
 
     const sendForm = async (data: DataType) => {
@@ -59,6 +60,10 @@ const FormResponsavel = () => {
             console.log(e);
         }
     };
+
+    useEffect(() => {
+        if (!token) navigate("/login");
+    }, [])
 
     return (
         <form onSubmit={handleSubmit(sendForm)}>
