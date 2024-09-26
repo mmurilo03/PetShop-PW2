@@ -108,8 +108,8 @@ const Detalhes = () => {
     <>
       <Navbar />
       <div className="p-8">
-        <div className="bg-primaria w-full p-8 rounded-md flex gap-8 items-center justify-between">
-          <div className="flex gap-8 items-center">
+        <div className="bg-primaria w-full p-8 rounded-md flex gap-8 items-center justify-between xsm:flex-col lg:flex-row md:flex-row">
+          <div className="flex gap-8 items-center xsm:flex-col lg:flex-row md:flex-row">
             <img
               className="rounded-lg object-cover h-80 w-80 shadow-white shadow-sm"
               src={atendimento!.imagem}
