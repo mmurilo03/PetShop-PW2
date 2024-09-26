@@ -10,22 +10,37 @@ import { useEffect } from "react";
 
 const imageTypes = ["image/jpg", "image/jpeg", "image/png", "image/webp"];
 
-const schema = z.object({
-    nome: z.string({ required_error: "Digite o nome" }).min(1, "Digite o nome"),
-    funcao: z.string({ required_error: "Digite a função" }).min(1, "Digite a função"),
-    telefone: z.string({ required_error: "Digite o telefone" }).min(1, "Digite o telefone"),
-    email: z.string({ required_error: "Digite o email" }).email("Digite um email válido").min(1, "Digite o email"),
-    senha: z.string({ required_error: "Digite a senha" }).min(1, "Digite a senha"),
-    imagem: z
-        .instanceof(FileList, { fatal: true, message: "Imagem obrigatória" })
-        .refine((files) => files?.length === 1, "Imagem obrigatória")
-        .refine((files) => imageTypes.includes(files[0]?.type), "Tipo não suportado"),
-});
+const schema = z
+    .object({
+        nome: z.string({ required_error: "Digite o nome" }).min(1, "Digite o nome"),
+        funcao: z.string({ required_error: "Digite a função" }).min(1, "Digite a função"),
+        telefone: z.string({ required_error: "Digite o telefone" }).min(1, "Digite o telefone"),
+        email: z
+            .string({ required_error: "Digite o email" })
+            .email("Digite um email válido")
+            .min(1, "Digite o email"),
+        senha: z.string({ required_error: "Digite a senha" }).min(1, "Digite a senha"),
+        confirmarSenha: z
+            .string({ required_error: "Digite a confirmação de senha" })
+            .min(1, "Digite a confirmação de senha"),
+        imagem: z
+            .instanceof(FileList, { fatal: true, message: "Imagem obrigatória" })
+            .refine((files) => files?.length === 1, "Imagem obrigatória")
+            .refine((files) => imageTypes.includes(files[0]?.type), "Tipo não suportado"),
+    })
+    .superRefine(({ senha, confirmarSenha }, ctx) => {
+        if (senha != confirmarSenha) {
+            ctx.addIssue({
+                code: "custom",
+                message: "Senhas não são iguais",
+                path: ["confirmarSenha"],
+            });
+        }
+    });
 
 type DataType = z.infer<typeof schema>;
 
 const FormResponsavel = () => {
-
     const {
         register,
         handleSubmit,
@@ -63,19 +78,21 @@ const FormResponsavel = () => {
 
     useEffect(() => {
         if (!token) navigate("/login");
-    }, [])
+    }, []);
 
     return (
         <form onSubmit={handleSubmit(sendForm)}>
             <div className="w-full h-full flex flex-col gap-8 items-center p-6 sm:p-6 md:p-8">
                 <div className="flex w-full items-center">
-                <button onClick={() => {
-                    navigate("/gerenciar", { state: { cardTypes: "Responsáveis" } })
-                }}>
-                    <FaArrowLeft className="text-[200%]" />
-                </button>
-                <h1 className="font-bold text-4xl text-black mx-auto">Cadastrar Pet</h1>
-            </div>
+                    <button
+                        onClick={() => {
+                            navigate("/gerenciar", { state: { cardTypes: "Responsáveis" } });
+                        }}
+                    >
+                        <FaArrowLeft className="text-[200%]" />
+                    </button>
+                    <h1 className="font-bold text-4xl text-black mx-auto">Cadastrar Responsável</h1>
+                </div>
                 <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
                         Nome <span className="text-red-500">*</span>
@@ -135,6 +152,18 @@ const FormResponsavel = () => {
                         placeholder="Digite a senha"
                     />
                     <p className="text-red-700">{errors.senha?.message}</p>
+                </div>
+                <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
+                    <label className="font-bold">
+                        Confirmar Senha <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        {...register("confirmarSenha")}
+                        type="password"
+                        className="border shadow-lg py-4 rounded-md pl-2"
+                        placeholder="Digite a confirmação de senha"
+                    />
+                    <p className="text-red-700">{errors.confirmarSenha?.message}</p>
                 </div>
                 <div className="flex flex-col w-full sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">

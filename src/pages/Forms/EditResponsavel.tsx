@@ -21,10 +21,19 @@ const schema = z.object({
         .min(1, "Digite o email"),
     senhaAntiga: z.string({ required_error: "Digite a senha antiga" }).min(1, "Digite a senha antiga"),
     senhaNova: z.string({ required_error: "Digite a senha" }).min(1, "Digite a senha"),
+    confirmarSenha: z.string({ required_error: "Digite a confirmação de senha" }).min(1, "Digite a confirmação de senha"),
     imagem: z
         .instanceof(FileList, { fatal: true, message: "Imagem obrigatória" })
         .refine((files) => files?.length === 1, "Imagem obrigatória")
         .refine((files) => imageTypes.includes(files[0]?.type), "Tipo não suportado"),
+}).superRefine(({ senhaNova, confirmarSenha}, ctx) => {
+    if (senhaNova != confirmarSenha) {
+        ctx.addIssue({
+            code: "custom",
+            message: "Senhas não são iguais",
+            path: ["confirmarSenha"]
+        })
+    }
 });
 
 type DataType = z.infer<typeof schema>;
@@ -174,6 +183,18 @@ const EditResponsavel = () => {
                         placeholder="Digite a senha"
                     />
                     <p className="text-red-700">{errors.senhaNova?.message}</p>
+                </div>
+                <div className="flex flex-col sm:w-full md:w-full lg:w-[50%]">
+                    <label className="font-bold">
+                        Confirmar Senha <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        {...register("confirmarSenha")}
+                        type="password"
+                        className="border shadow-lg py-4 rounded-md pl-2"
+                        placeholder="Digite a confirmação de senha"
+                    />
+                    <p className="text-red-700">{errors.confirmarSenha?.message}</p>
                 </div>
                 <div className="flex flex-col w-full sm:w-full md:w-full lg:w-[50%]">
                     <label className="font-bold">
