@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaPaw, FaPencilAlt, FaRegTrashAlt } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import Cookies from "universal-cookie";
@@ -45,11 +45,7 @@ interface Pets {
 }
 
 const CardGerenciamento = (props: CardProps) => {
-    const cont = [""];
-
-    for (let tag of Object.keys(props.tags)) {
-        cont.push(`${tag}: ${props.tags[tag]}`);
-    }
+    const [cont, setCont] = useState<string[]>([]);
 
     const navigate = useNavigate();
 
@@ -59,6 +55,8 @@ const CardGerenciamento = (props: CardProps) => {
     api.defaults.headers.common.Authorization = token;
 
     const [image, setImage] = useState("");
+    const [hasAddress, setHasAddress] = useState(false);
+    const requestAddress = useRef(true);
     const [loading, setLoading] = useState(true);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -91,6 +89,22 @@ const CardGerenciamento = (props: CardProps) => {
         setLoading(false);
     };
 
+    const getEndereco = async (lat: string, lng: string) => {
+        const cookie = new Cookies();
+        const token = cookie.get("token");
+        api.defaults.headers.common.Authorization = token;
+
+        try {
+            const endereco = (await api.post("/pet/endereco", { lat: lat, lng: lng })).data.address;
+            setCont((prev) => {
+                const temp = [...prev];
+                temp.push(`Endereço: ${endereco}`);
+                return temp;
+            });
+            setHasAddress(true);
+        } catch (e) {}
+    };
+
     const goToFormPage = async () => {
         switch (props.type) {
             case "atendimento":
@@ -107,10 +121,26 @@ const CardGerenciamento = (props: CardProps) => {
     };
 
     useEffect(() => {
+        if (requestAddress.current) {
+            requestAddress.current = false
+            for (let tag of Object.keys(props.tags)) {
+                if (tag == "Endereço") {
+                    const lat = props.tags[tag].split("|")[0];
+                    const lng = props.tags[tag].split("|")[1];
+                    getEndereco(lat, lng);
+                } else {
+                    setCont((prev) => {
+                        const temp = [...prev];
+                        temp.push(`${tag}: ${props.tags[tag]}`);
+                        return temp;
+                    });
+                }
+            }
+        }
         getImage();
     }, [image]);
 
-    if (loading) return <Loading />;
+    if (loading || !hasAddress) return <Loading />;
 
     return (
         <>
@@ -129,7 +159,7 @@ const CardGerenciamento = (props: CardProps) => {
                         ) : (
                             <></>
                         )}
-                        {(props.type == "responsavel" && user.id != 1) ? (
+                        {props.type == "responsavel" && user.id != 1 ? (
                             <></>
                         ) : (
                             <button

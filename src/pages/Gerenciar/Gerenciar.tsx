@@ -327,7 +327,7 @@ const Gerenciar = () => {
                                         img={value.imagem}
                                         nome={value.nome}
                                         pet={false}
-                                        tags={{ Função: value.funcao, email: value.email }}
+                                        tags={{ Função: value.funcao, Email: value.email }}
                                         key={value.id}
                                     />
                                 );
@@ -350,9 +350,9 @@ const Gerenciar = () => {
                                         nome={value.nome}
                                         pet={false}
                                         tags={{
-                                            tutor: value.tutor,
-                                            telefone: value.telefone,
-                                            endereco: value.endereco,
+                                            Tutor: value.tutor,
+                                            Telefone: value.telefone,
+                                            "Endereço": value.endereco,
                                         }}
                                         key={value.id}
                                     />
