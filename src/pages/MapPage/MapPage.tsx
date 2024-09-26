@@ -22,14 +22,16 @@ const MapPage = () => {
 
     useEffect(() => {
         if (!token) navigate("/login");
-    }, [])
+    }, []);
 
     return (
         <div className="w-screen h-screen flex flex-col gap-8 items-center p-8">
             <div className="flex w-full items-center">
-                <button onClick={() => {
-                    navigate(-1)
-                }}>
+                <button
+                    onClick={() => {
+                        navigate(-1);
+                    }}
+                >
                     <FaArrowLeft />
                 </button>
                 <h1 className="font-bold text-4xl text-black mx-auto">Endereço</h1>
@@ -60,7 +62,17 @@ const MapPage = () => {
                 text="Salvar"
                 className="bg-primaria border py-4 px-24 text-white"
                 onClick={() => {
-                    navigate(-1);
+                    navigate("/gerenciar/form/pet", {
+                        state: {
+                            obj: {
+                                id: formContext.id,
+                                nome: formContext.nome,
+                                telefone: formContext.telefone,
+                                tutor: formContext.tutor,
+                                endereco: formContext.endereco,
+                            },
+                        },
+                    });
                 }}
             />
         </div>

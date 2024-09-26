@@ -50,8 +50,8 @@ const FormPet = () => {
             const config = {
                 headers: { "content-type": "multipart/form-data" },
             };
-            if (location.state?.obj) {
-                form.append("id", location.state?.obj.id);
+            if (formContext.id) {
+                form.append("id", `${formContext.id}`);
             }
             form.append("nome", data.nome);
             form.append("tutor", data.tutor);
@@ -87,10 +87,14 @@ const FormPet = () => {
         if (!token) navigate("/login");
         if (!location.state?.obj) return;
 
+        if (location.state?.obj.id) {
+
+            formContext.id = location.state?.obj.id;
+        }
         formContext.nome = location.state?.obj.nome;
         formContext.telefone = location.state?.obj.telefone;
         formContext.tutor = location.state?.obj.tutor;
-        formContext.endereco = location.state?.obj.endereco;
+        formContext.endereco = location.state?.obj.endereco;        
 
         setValue("endereco", location.state?.obj.endereco);
         setError("endereco", { message: "" });
