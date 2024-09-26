@@ -119,6 +119,7 @@ const FormAtendimento = () => {
     }, []);
 
     useEffect(() => {
+        if (!token) navigate("/login");
         if (!location.state?.obj) return;
         setValue("date", location.state?.obj.date.split("T")[0]);
         setValue("descricao", location.state?.obj.descricao);

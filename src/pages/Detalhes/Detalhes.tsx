@@ -2,9 +2,9 @@ import Cookies from "universal-cookie";
 import { api } from "../../api/api";
 import { useEffect, useState } from "react";
 import Loading from "../../components/Loading/Loading";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
-import { AdvancedMarker, APIProvider, Map } from "@vis.gl/react-google-maps";
+import { APIProvider, Map } from "@vis.gl/react-google-maps";
 
 interface Atendimento {
   complete: number;
@@ -26,6 +26,10 @@ const Detalhes = () => {
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
 
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+  const navigate = useNavigate();
+
   let { id } = useParams();
 
   const getPetImage = async (petId: number) => {
@@ -37,16 +41,24 @@ const Detalhes = () => {
       api.defaults.headers.common.Authorization = token;
       const petTemp = (await api.get(`pet/${petId}`)).data.pet;
 
-      const tempLat = petTemp.endereco.split("|")[0]
-      const tempLng = petTemp.endereco.split("|")[1]
       setLat(petTemp.endereco.split("|")[0])
       setLng(petTemp.endereco.split("|")[1])
-      
-      const endereco = await getEndereco(tempLat, tempLng);      
-      setAtendimento((atendimento) => {
-        return { ...atendimento, endereco: endereco } as Atendimento;
-      });
 
+      console.log(lat);
+      console.log(lng);
+      
+
+      setAtendimento((atendimento) => {
+        return { ...atendimento, endereco: petTemp.endereco } as Atendimento;
+      });
+      setAtendimento((atendimento) => {
+        let dataTemp = "";
+        dataTemp = atendimento!.date.split("T")[0] as string;
+        dataTemp = `${dataTemp.split("-")[2]}/${dataTemp.split("-")[1]}/${
+          dataTemp.split("-")[0]
+        }`;
+        return { ...atendimento, date: dataTemp } as Atendimento;
+      });
       imageName = petTemp.imagem;
       petHasImage = true;
     } catch (e) {
@@ -70,35 +82,20 @@ const Detalhes = () => {
     setLoading(false);
   };
 
-  const getEndereco = async (lat: string, lng: string) => {
-    const cookie = new Cookies();
-    const token = cookie.get("token");
-    api.defaults.headers.common.Authorization = token;
-
-    try {
-        const endereco = (await api.post("/pet/endereco", { lat: lat, lng: lng })).data.address;            
-        return endereco;
-    } catch (e) {}
-};
-
   const getAtendimento = async () => {
     try {
       const cookie = new Cookies();
       const token = cookie.get("token");
       api.defaults.headers.common.Authorization = token;
-      const res = (await api.get(`/atendimento/${id}`)).data.atendimento;
-      let dataTemp = res.date.split("T")[0] as string;
-      dataTemp = `${dataTemp.split("-")[2]}/${dataTemp.split("-")[1]}/${
-        dataTemp.split("-")[0]
-      }`;
-      
-      const petId = res.petId;
-      setAtendimento({...res, date: dataTemp});
+      const res = await api.get(`/atendimento/${id}`);
+      const petId = res.data.atendimento.petId;
+      setAtendimento(res.data.atendimento);
       await getPetImage(petId);
     } catch (e) {}
   };
 
   useEffect(() => {
+    if (!token) navigate("/login")
     getAtendimento();
   }, [loading]);
 
@@ -146,12 +143,10 @@ const Detalhes = () => {
                   lat: Number(lat),
                   lng: Number(lng),
                 }}
-                defaultZoom={15}
+                defaultZoom={14}
                 gestureHandling={"greedy"}
                 disableDefaultUI={true}
-              >
-                <AdvancedMarker position={{ lat: Number(lat), lng: Number(lng) }} />
-              </Map>
+              />
             </APIProvider>
           </div>
         </div>

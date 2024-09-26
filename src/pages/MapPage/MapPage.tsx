@@ -1,9 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AdvancedMarker, APIProvider, Map } from "@vis.gl/react-google-maps";
 import { FormContext } from "../../components/Context/FormContext";
 import Button from "../../components/Button/Button";
 import { FaArrowLeft } from "react-icons/fa";
+import Cookies from "universal-cookie";
 
 interface EnderecoCoord {
     lat: number;
@@ -14,7 +15,14 @@ const MapPage = () => {
     const [markerLocation, setMarkerLocation] = useState<EnderecoCoord>();
     const formContext = useContext(FormContext);
 
+    const cookie = new Cookies();
+    const token = cookie.get("token");
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) navigate("/login");
+    }, [])
 
     return (
         <div className="w-screen h-screen flex flex-col gap-8 items-center p-8">
