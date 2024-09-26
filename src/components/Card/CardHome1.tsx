@@ -38,7 +38,7 @@ const CardHome1 = (props: CardProps) => {
             const petTemp = (await api.get(`pet/${petId}`)).data.pet;
 
             setAtendimento((atendimento) => {
-                return { ...atendimento, endereco: petTemp.endereco } as Atendimento;
+                return { ...atendimento } as Atendimento;
             });
             setAtendimento((atendimento) => {
                 let dataTemp = "";
@@ -74,10 +74,30 @@ const CardHome1 = (props: CardProps) => {
             const cookie = new Cookies();
             const token = cookie.get("token");
             api.defaults.headers.common.Authorization = token;
-            const res = await api.get(`/atendimento/${props.id}`);
-            const petId = res.data.atendimento.petId;
-            setAtendimento(res.data.atendimento);
+            const res = (await api.get(`/atendimento/${props.id}`)).data.atendimento;
+            const petId = res.petId;
+
+            const pet = (await api.get(`/pet/${petId}`)).data.pet;
+            
+            const lat = pet.endereco.split("|")[0];
+            const lng = pet.endereco.split("|")[1];
+            const endereco = await getEndereco(lat, lng);
+
+            setAtendimento((atendimento) => {
+                return {...atendimento, ...res, endereco: endereco}
+            });
             await getPetImage(petId);
+        } catch (e) {}
+    };
+
+    const getEndereco = async (lat: string, lng: string) => {
+        const cookie = new Cookies();
+        const token = cookie.get("token");
+        api.defaults.headers.common.Authorization = token;
+
+        try {
+            const endereco = (await api.post("/pet/endereco", { lat: lat, lng: lng })).data.address;            
+            return endereco;
         } catch (e) {}
     };
 
@@ -85,7 +105,7 @@ const CardHome1 = (props: CardProps) => {
         getAtendimento();
     }, [loading]);
 
-    if (loading) return <Loading/>;
+    if (loading) return <Loading />;
 
     return (
         <>
@@ -102,9 +122,7 @@ const CardHome1 = (props: CardProps) => {
                         <div>
                             <IoLocationSharp />
                         </div>
-                        <p className="overflow-hidden text-ellipsis">
-                            {atendimento!.endereco}
-                        </p>
+                        <p className="overflow-hidden text-ellipsis">{atendimento!.endereco}</p>
                     </div>
                 </div>
                 <div className="flex flex-col rounded-lg bg-secundaria max-w-80 text-[90%]">
