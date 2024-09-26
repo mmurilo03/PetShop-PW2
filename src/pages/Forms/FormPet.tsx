@@ -61,11 +61,17 @@ const FormPet = () => {
 
             api.defaults.headers.common.Authorization = cookie.get("token");
 
-            if (location.state?.obj) {
+            if (formContext.id) {
                 await api.patch("/pet/edit", form, config);
             } else {
                 await api.post("/pet/create", form, config);
             }
+
+            formContext.id = undefined;
+            formContext.nome = "";
+            formContext.telefone = "";
+            formContext.tutor = "";
+            formContext.endereco = "";
 
             navigate("/gerenciar", { state: { cardTypes: "Pets" } });
         } catch (e) {
@@ -88,13 +94,12 @@ const FormPet = () => {
         if (!location.state?.obj) return;
 
         if (location.state?.obj.id) {
-
             formContext.id = location.state?.obj.id;
         }
         formContext.nome = location.state?.obj.nome;
         formContext.telefone = location.state?.obj.telefone;
         formContext.tutor = location.state?.obj.tutor;
-        formContext.endereco = location.state?.obj.endereco;        
+        formContext.endereco = location.state?.obj.endereco;
 
         setValue("endereco", location.state?.obj.endereco);
         setError("endereco", { message: "" });
