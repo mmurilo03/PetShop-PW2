@@ -136,6 +136,7 @@ const CardGerenciamento = (props: CardProps) => {
                     });
                 }
             }
+            setHasAddress(true)
         }
         getImage();
     }, [image]);
