@@ -4,6 +4,7 @@ import { api } from "../../api/api";
 import Cookies from "universal-cookie";
 import { useEffect, useState } from "react";
 import Loading from "../Loading/Loading";
+import { useNavigate } from "react-router-dom";
 
 interface CardProps {
     id: number;
@@ -27,6 +28,7 @@ const CardHome1 = (props: CardProps) => {
     const [atendimento, setAtendimento] = useState<Atendimento>();
 
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const getPetImage = async (petId: number) => {
         let petHasImage = false;
@@ -109,7 +111,7 @@ const CardHome1 = (props: CardProps) => {
 
     return (
         <>
-            <div className="w-80 animate-in zoom-in-75">
+            <div className="w-80 animate-in zoom-in-75" onClick={() => navigate(`/detalhes-atendimento/${props.id}`)}>
                 <img className="rounded-lg object-cover h-48 w-80" src={atendimento!.imagem} />
                 <div className="flex flex-row justify-between text-[90%]">
                     <div className="p-1 gap-2 flex w-[48%] items-center">
