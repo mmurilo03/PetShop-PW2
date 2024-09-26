@@ -62,7 +62,7 @@ const Navbar = () => {
     return (
         <>
             <nav className="p-8 h-full w-full bg-primaria flex items-center text-white justify-between z-1 lg:flex-row md:flex-col xsm:flex-col">
-                <div className="w-44">
+                <div className="w-44 cursor-pointer" onClick={() => navigate("/home")}>
                     <LogoHorizontal width="100%" height="40" />
                 </div>
 
